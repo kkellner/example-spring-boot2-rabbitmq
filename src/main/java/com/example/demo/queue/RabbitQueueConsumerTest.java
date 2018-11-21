@@ -19,11 +19,12 @@ public class RabbitQueueConsumerTest {
     
     	LOG.info("Listener got: "+message);
 
-    	try {
+    	//try {
     		throw new Exception("An example Exception");
-    	} catch (Exception e) {
-    		throw new AmqpRejectAndDontRequeueException(e);
-    	}
+//    	} catch (Exception e) {
+//    		// Need to throw AmqpRejectAndDontRequeueException to get item to the dead letter queue
+//    		throw new AmqpRejectAndDontRequeueException(e);
+//    	}
     	
     }
 

@@ -14,7 +14,7 @@ public class RabbitQueuePublisherTest {
 
 	private static Logger LOG = LoggerFactory.getLogger(RabbitQueuePublisherTest.class);
 
-	public static final String QUEUE_NAME = "testQueue";
+	public static final String QUEUE_NAME = "testQueue2";
 
 	@Autowired
 	private RabbitTemplate rabbitTemplate;
