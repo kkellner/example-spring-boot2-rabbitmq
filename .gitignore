@@ -19,6 +19,10 @@
 *.tar.gz
 *.rar
 
+.gradle
+.project
+.classpath
+.settings
 build/
 bin/
 
