@@ -5,6 +5,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListenerConfigurer;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistrar;
+import org.springframework.amqp.rabbit.retry.RejectAndDontRequeueRecoverer;
 import org.springframework.cloud.config.java.AbstractCloudConfig;
 import org.springframework.cloud.config.java.ServiceScan;
 import org.springframework.context.annotation.Bean;
@@ -45,15 +46,17 @@ public class RabbitConsumerConfig extends AbstractCloudConfig implements RabbitL
 		//RetryContextCache cache=new MapRetryContextCache();
 		//MissingMessageIdAdvice missingIdAdvice=new MissingMessageIdAdvice(cache);
 		
-		//factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
+		factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
 		return factory;
 	}
 		
 	@Bean
 	public StatefulRetryOperationsInterceptor statefulRetryOperationsInterceptor(){
 	   return RetryInterceptorBuilder.stateful()
+              .messageKeyGenerator(new UniqueMessageKeyGenerator())
 	          .maxAttempts(5)
 	          .backOffOptions(1000,2.0,10000)
+              .recoverer(new RejectAndDontRequeueRecoverer())
 	          .build();
 	}
 }

@@ -33,23 +33,38 @@ public class RabbitQueueConsumerTest {
     public void receiveMessage(@Header(required = false, name = "x-death") ArrayList<HashMap<String,Object>> xDeath, final TestMessage message) throws Exception {
     
     	LOG.info("Listener got: "+message);
-    	try {
+//    	try {
     		throw new Exception("An example Exception");
-    	} catch (Exception e) {
-            if (xDeath!=null) {
-                LOG.info("Headers: "+ xDeath);
-                long count = (Long)xDeath.get(0).get("count");
-                LOG.info("x-death count: "+ count);
-                LOG.info("Retries that have been performed: "+ count);
-                if (count >= MAX_RETRY_COUNT) {
-                    LOG.info("Maximum retry attempts to process message, it will be put into manual queue.  Message:"+message);
-                    postToManualQueue(RabbitQueuePublisherTest.QUEUE_MANUAL_NAME, message);
-                    return;
-                }
-            }
-            // Need to throw AmqpRejectAndDontRequeueException to get item to the dead letter queue (retry queue)
-    		throw new AmqpRejectAndDontRequeueException(e);
-    	}
+//    	} catch (Exception e) {
+//            if (xDeath!=null) {
+//                LOG.info("Headers: "+ xDeath);
+//                long count = (Long)xDeath.get(0).get("count");
+//                LOG.info("x-death count: "+ count);
+//                LOG.info("Retries that have been performed: "+ count);
+//                if (count >= MAX_RETRY_COUNT) {
+//                    LOG.info("Maximum retry attempts to process message, it will be put into manual queue.  Message:"+message);
+//                    postToManualQueue(RabbitQueuePublisherTest.QUEUE_MANUAL_NAME, message);
+//                    return;
+//                }
+//            }
+//            // Need to throw AmqpRejectAndDontRequeueException to get item to the dead letter queue (retry queue)
+//    		throw new AmqpRejectAndDontRequeueException(e);
+//    	}
+//    	} catch (Exception e) {
+//            if (xDeath!=null) {
+//                LOG.info("Headers: "+ xDeath);
+//                long count = (Long)xDeath.get(0).get("count");
+//                LOG.info("x-death count: "+ count);
+//                LOG.info("Retries that have been performed: "+ count);
+//                if (count >= MAX_RETRY_COUNT) {
+//                    LOG.info("Maximum retry attempts to process message, it will be put into manual queue.  Message:"+message);
+//                    postToManualQueue(RabbitQueuePublisherTest.QUEUE_MANUAL_NAME, message);
+//                    return;
+//                }
+//            }
+//            // Need to throw AmqpRejectAndDontRequeueException to get item to the dead letter queue (retry queue)
+//    		throw new AmqpRejectAndDontRequeueException(e);
+//    	}
 
     }
 
