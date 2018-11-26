@@ -45,7 +45,7 @@ public class RabbitConsumerConfig extends AbstractCloudConfig implements RabbitL
 		//RetryContextCache cache=new MapRetryContextCache();
 		//MissingMessageIdAdvice missingIdAdvice=new MissingMessageIdAdvice(cache);
 		
-		factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
+		//factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
 		return factory;
 	}
 		
