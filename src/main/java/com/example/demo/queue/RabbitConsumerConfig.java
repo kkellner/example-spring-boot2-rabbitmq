@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.handler.annotation.support.DefaultMessageHandlerMethodFactory;
+import org.springframework.retry.interceptor.RetryOperationsInterceptor;
 import org.springframework.retry.interceptor.StatefulRetryOperationsInterceptor;
 import org.springframework.retry.policy.MapRetryContextCache;
 import org.springframework.retry.policy.RetryContextCache;
@@ -42,15 +43,28 @@ public class RabbitConsumerConfig extends AbstractCloudConfig implements RabbitL
 	public SimpleRabbitListenerContainerFactory myRabbitListenerContainerFactory() {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		factory.setConnectionFactory(this.connectionFactory().rabbitConnectionFactory());
-		
-		//RetryContextCache cache=new MapRetryContextCache();
-		//MissingMessageIdAdvice missingIdAdvice=new MissingMessageIdAdvice(cache);
-		
-		factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
+		//factory.setAdviceChain(new Advice[] { statefulRetryOperationsInterceptor() } );
+        //factory.setAdviceChain(new Advice[] { statelessRetryOperationsInterceptor() } );
+
+        //factory.setDefaultRequeueRejected(false);
+        factory.setPrefetchCount(50);
+        factory.setConcurrentConsumers(2);
+        factory.setMaxConcurrentConsumers(2);
 		return factory;
 	}
-		
-	@Bean
+
+    @Bean
+    public RetryOperationsInterceptor statelessRetryOperationsInterceptor(){
+        return RetryInterceptorBuilder.stateless()
+                .maxAttempts(5)
+                .backOffOptions(1000,2.0,10000)
+                .recoverer(new RejectAndDontRequeueRecoverer())
+               // .retryOperations()
+                .build();
+    }
+
+
+    @Bean
 	public StatefulRetryOperationsInterceptor statefulRetryOperationsInterceptor(){
 	   return RetryInterceptorBuilder.stateful()
               .messageKeyGenerator(new UniqueMessageKeyGenerator())
